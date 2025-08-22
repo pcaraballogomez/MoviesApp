@@ -26,6 +26,7 @@ struct AddMovieScreen: View {
             TextField("Year", value: $year, format: .number)
                 .keyboardType(.numberPad)
         }
+        .navigationTitle("Add Movie")
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
                 Button("Close") {
@@ -36,6 +37,7 @@ struct AddMovieScreen: View {
             ToolbarItem(placement: .topBarTrailing) {
                 Button("Save") {
                     saveMovie()
+                    dismiss()
                 }.disabled(!isFormatValid)
             }
         }
