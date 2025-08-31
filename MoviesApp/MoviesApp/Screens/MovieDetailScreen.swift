@@ -47,7 +47,7 @@ struct MovieDetailScreen: View {
                         Text("No reviews")
                     }
                 } else {
-                    ReviewListView(reviews: movie.reviews)
+                    ReviewListView(movie: movie)
                 }
 
             }
