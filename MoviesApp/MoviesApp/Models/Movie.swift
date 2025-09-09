@@ -16,7 +16,7 @@ final class Movie {
     @Relationship(deleteRule: .cascade, inverse: \Review.movie)
     var reviews: [Review] = []
 
-    @Relationship(deleteRule: .cascade, inverse: \Actor.movies)
+    @Relationship(deleteRule: .nullify, inverse: \Actor.movies)
     var actors: [Actor] = []
 
     init(title: String, year: Int) {
