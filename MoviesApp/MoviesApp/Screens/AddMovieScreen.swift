@@ -15,9 +15,10 @@ struct AddMovieScreen: View {
 
     @State private var title = ""
     @State private var year: Int?
+    @State private var selectedActors: Set<Actor> = []
 
     private var isFormatValid: Bool {
-        !title.isEmptyOrWhitespace && year != nil
+        !title.isEmptyOrWhitespace && year != nil && !selectedActors.isEmpty
     }
 
     var body: some View {
@@ -25,7 +26,15 @@ struct AddMovieScreen: View {
             TextField("Title", text: $title)
             TextField("Year", value: $year, format: .number)
                 .keyboardType(.numberPad)
+
+            Section("Select Actors") {
+                ActorSelectionView(selectedActors: $selectedActors)
+            }
         }
+        // Good way to debug
+//        .onChange(of: selectedActors, { _, _ in
+//            print(selectedActors.count)
+//        })
         .navigationTitle("Add Movie")
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
@@ -47,8 +56,16 @@ struct AddMovieScreen: View {
         guard let year else { return }
 
         let movie = Movie(title: title, year: year)
+        movie.actors = Array(selectedActors)
+
+        selectedActors.forEach { actor in
+            actor.movies.append(movie)
+            context.insert(actor)
+        }
+
         context.insert(movie)
 
+        // Its not necessary
         do {
             try context.save()
         } catch {
