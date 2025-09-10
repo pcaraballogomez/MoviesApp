@@ -76,6 +76,7 @@ struct MovieListScreen: View {
 
             Button("Save") {
                 saveActor()
+                activeActionSheet = nil
             }
         }
     }
