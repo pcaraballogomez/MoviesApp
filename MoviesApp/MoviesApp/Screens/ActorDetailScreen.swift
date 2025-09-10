@@ -24,7 +24,6 @@ struct ActorDetailScreen: View {
         .onChange(of: selectedMovies, {
             actor.movies = Array(selectedMovies)
             context.insert(actor)
-
         })
         .navigationTitle(actor.name)
     }

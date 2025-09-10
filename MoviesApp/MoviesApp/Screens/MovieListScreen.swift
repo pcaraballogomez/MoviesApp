@@ -8,17 +8,21 @@
 import SwiftUI
 import SwiftData
 
+enum MovieListScreenActionSheet: Identifiable {
+    case addMovie
+    case addActor
+    case showFilter
+
+    var id: Int { hashValue }
+}
+
 struct MovieListScreen: View {
 
     @Environment(\.modelContext) private var context
 
-    @Query(sort: \Movie.title, order: .reverse) private var movies: [Movie]
-    @Query(sort: \Actor.name, order: .reverse) private var actors: [Actor]
 
     @State private var actorName = ""
-    // TODO: Refactor to enum
-    @State private var isAddMoviePresented: Bool = false
-    @State private var isAddActorPresented: Bool = false
+    @State private var activeActionSheet: MovieListScreenActionSheet?
 
     var body: some View {
 
@@ -27,7 +31,6 @@ struct MovieListScreen: View {
                 .font(.largeTitle)
                 .padding()
             MovieListView(movies: movies)
-
 
             Text("Actors")
                 .font(.largeTitle)
@@ -38,36 +41,41 @@ struct MovieListScreen: View {
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
                 Button("Add Actor") {
-                    isAddActorPresented = true
+                    activeActionSheet = .addActor
                 }
             }
             ToolbarItem(placement: .topBarTrailing) {
                 Button("Add Movie") {
-                    isAddMoviePresented = true
+                    activeActionSheet = .addMovie
                 }
             }
         }
-        .sheet(isPresented: $isAddMoviePresented) {
-            NavigationStack {
-                AddMovieScreen()
-            }
-        }
-        .sheet(isPresented: $isAddActorPresented) {
-            NavigationStack {
-                // TODO: Create view
-                Text("Add Actor")
-                    .font(.largeTitle)
-
-                TextField("Actor name", text: $actorName)
-                    .textFieldStyle(.roundedBorder)
+        .sheet(item: $activeActionSheet, content: { actionSheet in
+            switch actionSheet {
+            case .addMovie:
+                NavigationStack {
+                    AddMovieScreen()
+                }
+            case .addActor:
+                addActorActionSheet
                     .presentationDetents([.fraction(0.25)])
-                    .padding()
+            case .showFilter:
+                Text("Show filter screen")
+            }
+        })
+    }
 
-                Button("Save") {
-                    isAddActorPresented = false
-                    saveActor()
-                }
+    private var addActorActionSheet: some View {
+        VStack {
+            Text("Add Actor")
+                .font(.largeTitle)
 
+            TextField("Actor name", text: $actorName)
+                .textFieldStyle(.roundedBorder)
+                .padding()
+
+            Button("Save") {
+                saveActor()
             }
         }
     }
