@@ -20,22 +20,27 @@ struct MovieListView: View {
         switch filterOption {
         case .title(let movieTitle):
             return movies.filter { $0.title.localizedStandardContains(movieTitle) }
+        case .reviewsCount(let numberOfReviews):
+            return movies.filter { $0.reviews.count >= numberOfReviews }
         case .none:
             return movies
         }
     }
 
     // Filtro en base de datos
-    //    init(filterOption: FilterOption = .none) {
-    //        self.filterOption = filterOption
-    //
-    //        switch filterOption {
-    //        case .title(let movieTitle):
-    //            _movies = Query(filter: #Predicate { $0.title.localizedStandardContains(movieTitle) })
-    //        case .none:
-    //            _movies = Query()
-    //        }
-    //    }
+//    init(filterOption: FilterOption = .none) {
+//        self.filterOption = filterOption
+//
+//        switch filterOption {
+//        case .title(let movieTitle):
+//            _movies = Query(filter: #Predicate { $0.title.localizedStandardContains(movieTitle) })
+//        case .reviewsCount(let numberOfReviews):
+//            // No puedo usar reviewsCount porque es Transient y no está en base de datos.
+//            _movies = Query(filter: #Predicate { $0.reviews.count >= numberOfReviews })
+//        case .none:
+//            _movies = Query()
+//        }
+//    }
 
     var body: some View {
         List {
