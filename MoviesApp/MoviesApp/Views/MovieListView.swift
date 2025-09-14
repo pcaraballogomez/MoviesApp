@@ -21,7 +21,9 @@ struct MovieListView: View {
         case .title(let movieTitle):
             return movies.filter { $0.title.localizedStandardContains(movieTitle) }
         case .reviewsCount(let numberOfReviews):
-            return movies.filter { $0.reviews.count >= numberOfReviews }
+            return movies.filter { $0.reviewsCount >= numberOfReviews }
+        case .actorsCount(let numberOfActors):
+            return movies.filter { $0.actorsCount >= numberOfActors }
         case .none:
             return movies
         }
@@ -37,6 +39,9 @@ struct MovieListView: View {
 //        case .reviewsCount(let numberOfReviews):
 //            // No puedo usar reviewsCount porque es Transient y no está en base de datos.
 //            _movies = Query(filter: #Predicate { $0.reviews.count >= numberOfReviews })
+//        case .actorsCount(let numberOfActors):
+//            // No puedo usar reviewsActors porque es Transient y no está en base de datos.
+//            _movies = Query(filter: #Predicate { $0.actors.count >= numberOfActors })
 //        case .none:
 //            _movies = Query()
 //        }
