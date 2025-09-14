@@ -20,17 +20,31 @@ struct MovieListScreen: View {
 
     @Environment(\.modelContext) private var context
 
+//    @Query(
+//        filter: #Predicate { !$0.title.isEmpty },
+//        sort: \Movie.title,
+//        order: .forward
+//    ) private var movies: [Movie]
+    @Query(sort: \Actor.name, order: .forward) private var actors: [Actor]
 
     @State private var actorName = ""
     @State private var activeActionSheet: MovieListScreenActionSheet?
+    @State private var filterOption: FilterOption = .none
 
     var body: some View {
 
         VStack(alignment: .leading) {
-            Text("Movies")
-                .font(.largeTitle)
-                .padding()
-            MovieListView(movies: movies)
+            HStack(alignment: .firstTextBaseline) {
+                Text("Movies")
+                    .font(.largeTitle)
+                Spacer()
+                Button("Filter") {
+                    activeActionSheet = .showFilter
+                }
+            }
+            .padding()
+
+            MovieListView(filterOption: filterOption)
 
             Text("Actors")
                 .font(.largeTitle)

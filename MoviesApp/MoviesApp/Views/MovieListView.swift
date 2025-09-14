@@ -10,12 +10,36 @@ import SwiftData
 
 struct MovieListView: View {
 
-    let movies: [Movie]
     @Environment(\.modelContext) private var context
+
+    @Query(sort: \Movie.title, order: .forward) private var movies: [Movie]
+    let filterOption: FilterOption
+
+    // Filtrado en memoria. Cuidado si tengo muchos registros
+    var filteredMovies: [Movie] {
+        switch filterOption {
+        case .title(let movieTitle):
+            return movies.filter { $0.title.localizedStandardContains(movieTitle) }
+        case .none:
+            return movies
+        }
+    }
+
+    // Filtro en base de datos
+    //    init(filterOption: FilterOption = .none) {
+    //        self.filterOption = filterOption
+    //
+    //        switch filterOption {
+    //        case .title(let movieTitle):
+    //            _movies = Query(filter: #Predicate { $0.title.localizedStandardContains(movieTitle) })
+    //        case .none:
+    //            _movies = Query()
+    //        }
+    //    }
 
     var body: some View {
         List {
-            ForEach(movies) { movie in
+            ForEach(filteredMovies) { movie in
                 NavigationLink(value: movie) {
                     HStack {
                         Text(movie.title)
@@ -45,6 +69,6 @@ struct MovieListView: View {
 }
 
 #Preview {
-    MovieListView(movies: [])
+    MovieListView(filterOption: .none)
         .modelContainer(for: [Movie.self])
 }
