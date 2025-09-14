@@ -65,17 +65,7 @@ struct MovieListScreen: View {
             }
         }
         .sheet(item: $activeActionSheet, content: { actionSheet in
-            switch actionSheet {
-            case .addMovie:
-                NavigationStack {
-                    AddMovieScreen()
-                }
-            case .addActor:
-                addActorActionSheet
-                    .presentationDetents([.fraction(0.25)])
-            case .showFilter:
-                Text("Show filter screen")
-            }
+            sheetContent(for: actionSheet)
         })
     }
 
@@ -92,6 +82,20 @@ struct MovieListScreen: View {
                 saveActor()
                 activeActionSheet = nil
             }
+            .disabled(actorName.isEmpty)
+        }
+    }
+
+    @ViewBuilder
+    private func sheetContent(for actionSheet: MovieListScreenActionSheet) -> some View {
+        switch actionSheet {
+        case .addMovie:
+            NavigationStack { AddMovieScreen() }
+        case .addActor:
+            addActorActionSheet
+                .presentationDetents([.fraction(0.25)])
+        case .showFilter:
+            FilterSelectionScreen(filterOption: $filterOption)
         }
     }
 
