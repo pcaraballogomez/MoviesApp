@@ -41,18 +41,7 @@ struct MovieListView: View {
         List {
             ForEach(filteredMovies) { movie in
                 NavigationLink(value: movie) {
-
-                    HStack(alignment: .center) {
-                        VStack(alignment: .leading) {
-                            Text(movie.title)
-                            Text("Number of reviews: \(movie.reviewsCount)")
-                                .font(.caption)
-                            Text("Number of actors: \(movie.actorsCount)")
-                                .font(.caption)
-                        }
-                        Spacer()
-                        Text(movie.year.description)
-                    }
+                    MovieRow(movie: movie)
                 }
             }
             .onDelete(perform: deleteMovie)
